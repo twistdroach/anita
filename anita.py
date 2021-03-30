@@ -296,11 +296,16 @@ def make_sparse_image(fn, size):
     f.write(b"\000")
     f.close()
 
+def make_qcow2_image(fn, size):
+    subprocess.check_call(['qemu-img', 'create', '-f', 'qcow2', fn, str(size)])
+
 def make_image(fn, size, format):
     if format == 'dense':
         f = make_dense_image
     elif format == 'sparse':
         f = make_sparse_image
+    elif format == 'qcow2':
+        f = make_qcow2_image
     else:
         raise RuntimeError("unknown image format %s" % format)
     f(fn, size)
@@ -1303,7 +1308,6 @@ class Anita(object):
     def qemu_disk_args(self, path, devno = 0, writable = True, snapshot = False):
         drive_attrs = [
             ('file', path),
-            ('format', 'raw'),
             ('media', 'disk'),
             ('snapshot', ["off", "on"][snapshot])
         ]
