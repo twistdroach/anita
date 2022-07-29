@@ -1311,6 +1311,8 @@ class Anita(object):
             ('media', 'disk'),
             ('snapshot', ["off", "on"][snapshot])
         ]
+        if self.image_format in ['dense', 'sparse']:
+            drive_attrs += [('format', 'raw')]
         dev_args = []
         if self.dist.arch() == 'evbarm-earmv7hf':
             if self.machine == 'virt':
