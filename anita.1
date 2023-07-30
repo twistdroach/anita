@@ -1,4 +1,4 @@
-.Dd Oct 8, 2020
+.Dd Jul 7, 2022
 .Dt ANITA 1
 .Os
 .Sh NAME
@@ -19,8 +19,11 @@
 .Op Fl -structured-log-file Ar file
 .Op Fl -tests Ar kyua | atf
 .Op Fl -dtb Ar dtb
-.Op Fl -image_format Ar format
+.Op Fl -image-format Ar format
 .Op Fl -machine Ar machine
+.Op Fl -partitioning-scheme Ar scheme
+.Op Fl -xen-type Ar pv | hvm | pvh
+.Op Fl -no-entropy
 .Ar mode
 .Ar URL
 .Sh DESCRIPTION
@@ -344,7 +347,7 @@ mode, in seconds.  Starting with
 version 2.2, the timer is reset at the beginning of each ATF test
 program, so the timeout only needs to be greater than the duration
 of the longest test program rather than the full test run.
-The default is 3600 seconds (one hour).
+The default is 108600 seconds (3 hours).
 .It Fl -persist
 Store any changes to the contents of the system disk persistently,
 such that they may affect future
@@ -414,6 +417,14 @@ in the
 package assuming both it and
 .Nm
 itself have been installed via pkgsrc.
+.It Fl -xen-type Ar type
+Select the type of virtualization to use with Xen.  This can be
+.Ar pv ,
+.Ar hvm ,
+or
+.Ar pvh .
+The default is
+.Ar pv .
 .It Fl -image-format Ar format
 The disk image format to use for the virtual machine's system disk.
 Supported values are
@@ -431,6 +442,19 @@ evbarm-earmv7hf port to select the
 qemu machine type instead of the default of
 .Ar vexpress-a15 .
 Not consistently supported for other ports and VMMs.
+.It Fl -partitioning-scheme Ar scheme
+Use the given partitioning scheme instead of the port's default one.
+Currently only supported for the i386 and amd64 ports, where a scheme
+of
+.Ar MBR
+can be selected instead of the default of GPT.
+.It Fl -no-entropy
+If sysinst prompts the user to enter entropy and offers an option not
+to enter it, select that option.  This is intended for testing the
+behavior of said option and the resulting installation, and only works
+with certain versions of NetBSD that offer such an option.  The
+default is to supply the guest being installed with entropy from the
+host.
 .El
 .Sh DEBUGGING NETBSD USING ANITA
 .Nm

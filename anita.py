@@ -1003,7 +1003,8 @@ class Anita(object):
         disk_size = None, memory_size = None, persist = False, boot_from = None,
         structured_log = None, structured_log_file = None, no_install = False,
         tests = 'atf', dtb = '', xen_type = 'pv', image_format = 'dense',
-        machine = None, network_config = None):
+        machine = None, network_config = None, partitioning_scheme = None,
+        no_entropy = False):
         self.dist = dist
         if workdir:
             self.workdir = workdir
@@ -1087,6 +1088,8 @@ class Anita(object):
         self.xen_type = xen_type
         self.image_format = image_format
         self.machine = machine or self.get_arch_vmm_prop('machine_default')
+        self.partitioning_scheme = partitioning_scheme
+        self.no_entropy = no_entropy
 
         self.is_logged_in = False
         self.halted = False
@@ -1436,6 +1439,11 @@ class Anita(object):
         return vmm_props.get(key)
 
     def provide_entropy(self, child):
+        if self.no_entropy:
+            child.expect(r'([a-z]): Not now')
+            child.send(child.match.group(1) + b"\n")
+            return
+
         while True:
             # It would be good to match the "1:" prompt to detect
             # multi-line mode, but there's an ANSI control sequence
@@ -1516,7 +1524,7 @@ class Anita(object):
         # Boot the system to let it resize the image.
         self.start_boot(install = False, snapshot_system_disk = False)
         # The system will resize the image and then reboot.
-        # Waith for the login prompt and shut down cleanly.
+        # Wait for the login prompt and shut down cleanly.
         self.child.expect("login:")
         self.halt()
 
@@ -2255,11 +2263,13 @@ class Anita(object):
                 raise AssertionError
             elif r == 26:
                 # "a partitioning scheme"
-                #child.expect("([a-z]): Master Boot Record")
-                #child.send(child.match.group(1) + "\n")
-                # Sparc asks the question but does not have MBR as an option,
-                # only disklabel.  Just use the first choice, whatever that is.
-                child.send("a\n")
+                if self.partitioning_scheme == 'MBR':
+                    child.expect("([a-z]): Master Boot Record")
+                    child.send(child.match.group(1) + b"\n")
+                else:
+                    # Sparc asks the question but does not have MBR as an option,
+                    # only disklabel.  Just use the first choice, whatever that is.
+                    child.send("a\n")
             elif r == 27:
                 # "([a-z]): use the entire disk"
                 child.send(child.match.group(1) + b"\n")
@@ -2485,7 +2495,7 @@ class Anita(object):
     # Run the NetBSD ATF test suite on the guest.  Note that the
     # default timeout is separately defined here (for library callers)
     # and in the "anita" script (for command-line callers).
-    def run_tests(self, timeout = 3600):
+    def run_tests(self, timeout = 10800):
         mkdir_p(self.workdir)
         results_by_net = (self.vmm == 'noemu')
 

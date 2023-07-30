@@ -44,7 +44,7 @@ def main(argv = None):
                       metavar="SETS")
     parser.add_option("--test-timeout",
                       help="allow TIMEOUT seconds for each ATF test", metavar="TIMEOUT",
-                      type="int", default=3600)
+                      type="int", default=10800)
     parser.add_option("--run-timeout",
                       help="allow TIMEOUT seconds for command run using the --run option", metavar="TIMEOUT",
                       type="int", default=3600)
@@ -64,7 +64,7 @@ def main(argv = None):
                       type="string", default="atf")
     parser.add_option("--dtb", help='use the Device Tree Blob (.dtb) PATH_TO_DTB',
                       type="string", metavar="PATH_TO_DTB", default=dtb_path)
-    parser.add_option("--xen-type", help='select the Xen guest type: \"pv\", \"pvh\" or \"hvm\"',
+    parser.add_option("--xen-type", help='select the Xen guest type: \"pv\", \"hvm\", or \"pvh\"',
                       type="string", metavar="TYPE", default='pv')
     parser.add_option("--image-format", help='select the guest disk image format: \"qcow2\", \"dense\" or \"sparse\"',
                       type="string", metavar='FORMAT', default='dense')
@@ -73,6 +73,10 @@ def main(argv = None):
                       type="string", metavar='MACHINE')
     parser.add_option("--network-config", help='load network configuration from FILE',
                       type="string", metavar='FILE')
+    parser.add_option("--partitioning-scheme", help='prefer partitioning scheme SCHEME',
+                      type="string", metavar='SCHEME')
+    parser.add_option("--no-entropy", help='do not seed the installed system with entropy',
+                      action="store_true")
 
     (options, args) = parser.parse_args()
 
@@ -114,7 +118,9 @@ def main(argv = None):
         xen_type = options.xen_type,
         image_format = options.image_format,
         machine = options.machine,
-        network_config = options.network_config
+        network_config = options.network_config,
+        partitioning_scheme = options.partitioning_scheme,
+        no_entropy = options.no_entropy
         ) as a:
 
         status = 0

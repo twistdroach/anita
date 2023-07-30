@@ -1,4 +1,17 @@
 
+Increase the default of the --test-timeout option to 3 hours, as the
+timeout of the crypto/libcrypto/t_libcrypto:bn test case in the NetBSD
+ATF test suite has now been increased to 2 hours, and anita must use a
+longer timeout than any individual test case.
+
+New command line --no-entropy.
+
+Support Xen PVH virtualization, enabled by "--xen-type pvh".
+From Manuel Bouyer.
+
+New command line --partitioning-scheme, for testing i386 and amd64
+with MBR partitioning rather than the default GPT partitioning.
+
 - 2.10 released -
 
 Support the new sysinst root password and entropy configuration user
