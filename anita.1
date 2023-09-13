@@ -47,14 +47,14 @@ i386 and amd64 targets can be run under either qemu
 or Xen.  Other targets use either qemu, gxemul, or simh
 depending on the target architecture.
 .Sh EXAMPLES
-To install NetBSD 8.1/i386 from the master NetBSD FTP site, enter
+To install NetBSD 9.3/i386 from the master NetBSD FTP site, enter
 .Pp
-.Dl anita install http://ftp.netbsd.org/pub/NetBSD/NetBSD-8.1/i386/
+.Dl anita install http://ftp.netbsd.org/pub/NetBSD/NetBSD-9.3/i386/
 .Pp
 Installing NetBSD/sparc, sparc64, vax, or hppa works a bit differently:
 they use an ISO image instead of a directory containing boot floppies and sets:
 .Pp
-.Dl anita install http://ftp.netbsd.org/pub/NetBSD/iso/8.1/NetBSD-8.1-sparc.iso
+.Dl anita install http://ftp.netbsd.org/pub/NetBSD/iso/9.3/NetBSD-9.3-sparc.iso
 .Pp
 The evbarm ports do not currently support installation
 using sysinst, so anita will instead install them by decompressing
@@ -72,26 +72,26 @@ replace
 with
 .Ar interact :
 .Pp
-.Dl anita interact http://ftp.netbsd.org/pub/NetBSD/NetBSD-8.1/i386/
+.Dl anita interact http://ftp.netbsd.org/pub/NetBSD/NetBSD-9.3/i386/
 .Pp
 When you are done interacting with the virtual machine, you can kill it by
 typing control-a x (qemu) or control-c (gxemul).
 .Pp
 To run the NetBSD test suite on the installed system, use
 .Pp
-.Dl anita test http://ftp.netbsd.org/pub/NetBSD/NetBSD-8.1/i386/
+.Dl anita test http://ftp.netbsd.org/pub/NetBSD/NetBSD-9.3/i386/
 .Pp
 If you have a recent NetBSD host and a qemu version that supports
 NVMM (the NetBSD Virtual Machine Monitor), you can use it to run the
 tests several times faster than using qemu's built-in emulation:
 .Pp
-.Dl anita --vmm-args="-accel nvmm" test http://ftp.netbsd.org/pub/NetBSD/NetBSD-8.1/i386/
+.Dl anita --vmm-args="-accel nvmm" test http://ftp.netbsd.org/pub/NetBSD/NetBSD-9.3/i386/
 .Pp
 To install a snapshot, use something like the following (adjusting
-the URL to point to a current snapshot):
+the version number in the sparc URL as needed):
 .Pp
-.Dl anita install http://nyftp.netbsd.org/pub/NetBSD-daily/HEAD/201001280000Z/i386/
-.Dl anita install http://nyftp.netbsd.org/pub/NetBSD-daily/HEAD/201008070000Z/iso/sparccd.iso
+.Dl anita install http://nycdn.netbsd.org/pub/NetBSD-daily/HEAD/latest/i386/
+.Dl anita install http://nyftp.netbsd.org/pub/NetBSD-daily/HEAD/latest/images/NetBSD-10.99.7-sparc.iso
 .Pp
 If you have built a NetBSD release locally using
 .Ic "build.sh -R" ,
@@ -116,7 +116,7 @@ floppies, and a hard disk image in it.  By default, the work directory
 is a subdirectory of the current working directory, with a unique
 name automatically generated from the distribution URL, for example,
 .Pp
-.Dl work-http---ftp.netbsd.org-pub-NetBSD-NetBSD-8.1-i386-+a4c39
+.Dl work-http---ftp.netbsd.org-pub-NetBSD-NetBSD-9.3-i386-+a4c39
 .Pp
 You can also specify the name of the work directory explicitly using
 the
@@ -347,7 +347,7 @@ mode, in seconds.  Starting with
 version 2.2, the timer is reset at the beginning of each ATF test
 program, so the timeout only needs to be greater than the duration
 of the longest test program rather than the full test run.
-The default is 108600 seconds (3 hours).
+The default is 10800 seconds (3 hours).
 .It Fl -persist
 Store any changes to the contents of the system disk persistently,
 such that they may affect future

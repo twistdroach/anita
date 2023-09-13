@@ -74,6 +74,7 @@ arch_props = {
             'executable': 'qemu-system-sparc',
         },
         'scratch_disk': 'sd1c',
+        'memory_size': '64M',
     },
     'sparc64': {
         'qemu': {
@@ -2311,6 +2312,7 @@ class Anita(object):
                 self.provide_entropy(child)
             elif r == 39:
                 # Changing local password for root
+                child.expect("sword:")
                 child.send("\n")
             else:
                 raise AssertionError
